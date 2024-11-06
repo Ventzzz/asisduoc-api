@@ -1,7 +1,7 @@
 import express from  'express';
 import fs from "fs";
 
-const pool = require('./db');
+import pool from './db.js';
 const app = express();
 
 const readData = () => {
