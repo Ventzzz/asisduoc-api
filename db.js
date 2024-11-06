@@ -10,4 +10,4 @@ const pool = new Pool({
 });
 
 // Exporta el pool para usarlo en tus rutas
-module.exports = pool;
+export default pool;
