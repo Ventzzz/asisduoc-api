@@ -20,6 +20,9 @@ const writeData = (data) => {
 
 //POST CREAR CLASE
 app.post("/crearClase", async (req, res) => {
+    console.log(req.body);
+        console.log(`Nombre de clase: ${nombre_clase}, Horario: ${horario}`);
+
      const { nombre_clase, horario } = req.body; // Desestructuramos los datos del cuerpo de la solicitud
 
     // Verificar que los datos necesarios están presentes
