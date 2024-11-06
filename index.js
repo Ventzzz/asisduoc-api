@@ -30,7 +30,7 @@ app.post("/crearClase", async (req, res) => {
     try {
         // Crear una nueva clase en la base de datos
         const result = await pool.query(
-            'INSERT INTO clases (nombre_clase, horario) VALUES ($1, $2) RETURNING *',
+            'INSERT INTO clase (nombre_clase, horario) VALUES ($1, $2) RETURNING *',
             [nombre_clase, horario]
         );
 
@@ -57,7 +57,7 @@ app.post("/admitirAlumno/:clase/:codigo", (req, res) => {
 app.get("/obtenerClases", async (req, res) => {
     try {
     // Realizamos una consulta SQL usando el pool de conexiones
-    const result = await pool.query('SELECT * FROM clases;');
+    const result = await pool.query('SELECT * FROM clase;');
     res.json(result.rows);  // Devuelve los resultados como JSON
   } catch (error) {
     console.error(error);
