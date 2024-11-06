@@ -1,5 +1,6 @@
 // db.js (archivo de configuración de la base de datos)
-import { Pool } from 'pg';  // Importa Pool desde pg
+import pkg from 'pg';  // Importa todo el paquete `pg` como un objeto
+const { Pool } = pkg;  // Desestructuramos `Pool` desde el objeto `pkg`
 
 // Configura el pool de conexiones
 const pool = new Pool({
