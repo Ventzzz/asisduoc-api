@@ -1,5 +1,5 @@
 // db.js
-const { Pool } = require('pg');  // Importa el paquete `pg`
+import Pool from "pg";
 
 // Usa la URL de la base de datos desde la variable de entorno `DATABASE_URL`
 const pool = new Pool({
