@@ -2,7 +2,7 @@ import express from  'express';
 import fs from "fs";
 
 import pool from './db.js';
-const cors = require('cors');
+import cors from 'cors';
 const app = express();
 
 app.use(express.json());  // Esto es lo que necesitas agregar
