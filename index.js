@@ -19,7 +19,7 @@ const writeData = (data) => {
 };
 
 //POST CREAR CLASE
-app.post("/crearClase", (req, res) => {
+app.post("/crearClase", async (req, res) => {
      const { nombre_clase, horario } = req.body; // Desestructuramos los datos del cuerpo de la solicitud
 
     // Verificar que los datos necesarios están presentes
@@ -54,7 +54,7 @@ app.post("/admitirAlumno/:clase/:codigo", (req, res) => {
     res.send("CONFIRMAR ASISTENCIA")
 });
 //GET OBTENER TODAS LASCLASES
-app.get("/obtenerClases", (req, res) => {
+app.get("/obtenerClases", async (req, res) => {
     try {
     // Realizamos una consulta SQL usando el pool de conexiones
     const result = await pool.query('SELECT * FROM clases;');
