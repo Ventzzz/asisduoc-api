@@ -4,19 +4,7 @@ import fs from "fs";
 import pool from './db.js';
 const app = express();
 
-const readData = () => {
-    try{
-        const data = fs.readFileSync("./db.json");
-        console.log(JSON.parse(data));
-        return data;
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-const writeData = (data) => {
-
-};
+app.use(express.json());  // Esto es lo que necesitas agregar
 
 //POST CREAR CLASE
 app.post("/crearClase", async (req, res) => {
