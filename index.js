@@ -2,9 +2,13 @@ import express from  'express';
 import fs from "fs";
 
 import pool from './db.js';
+const cors = require('cors');
 const app = express();
 
 app.use(express.json());  // Esto es lo que necesitas agregar
+app.use(cors({
+    origin: 'http://localhost:8100' // Permite solo este origen, que es el de tu app en desarrollo
+  }));
 
 //POST CREAR CLASE
 app.post("/crearClase", async (req, res) => {
