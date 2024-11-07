@@ -1,5 +1,4 @@
 import express from  'express';
-import fs from "fs";
 
 import pool from './db.js';
 import cors from 'cors';
@@ -107,12 +106,12 @@ app.post("/admitirAlumno", async (req, res) => {
 
         const resultClase = await pool.query(
             'SELECT id FROM clase WHERE id = $1',
-            [resultCodigo]
+            [resultCodigo.rows[0].clase_id]
         );
 
         const resultAsistencia = await pool.query(
             'INSERT INTO asistencia (alumno_id, clase_id, hora) VALUES ($1, $2, $3) RETURNING *',
-            [id_alumno, resultClase, formattedTime]
+            [id_alumno, resultClase.rows[0].id, formattedTime]
         );
 
         // Devolver la nueva clase creada como respuesta
