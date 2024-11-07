@@ -66,7 +66,7 @@ app.post("/generarCodigoClase", async (req, res) => {
     try {
         const result = await pool.query(
             'INSERT INTO codigo (codigo, clase_id) VALUES ($1, $2) RETURNING *',
-            [id_clase, randomCode]
+            [randomCode, id_clase]
         );
 
         // Devolver la nueva clase creada como respuesta
