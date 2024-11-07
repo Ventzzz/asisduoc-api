@@ -7,8 +7,19 @@ const app = express();
 
 app.use(express.json());  // Esto es lo que necesitas agregar
 app.use(cors({
-    origin: 'http://localhost:8100' // Permite solo este origen, que es el de tu app en desarrollo
+    origin: 'http://localhost:5432' // Permite solo este origen, que es el de tu app en desarrollo
   }));
+
+
+function generateRandomCode(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters[randomIndex];
+    }
+    return code;
+}
 
 //POST CREAR CLASE
 app.post("/crearClase", async (req, res) => {
@@ -40,8 +51,34 @@ app.post("/crearClase", async (req, res) => {
     }
 });
 //GET GENERAR CODIGO
-app.get("/generarCodigoClase/:clase", (req, res) => {
-    res.send("GENERAR CODIGO")
+app.post("/generarCodigoClase", async (req, res) => {
+    console.log(req.body)
+
+    const { id_clase } = req.body; // Desestructuramos los datos del cuerpo de la solicitud
+
+    const length = 8; // Longitud del código aleatorio (puedes ajustarlo)
+    const randomCode = generateRandomCode(length);
+
+    if (!id_clase) {
+        return res.status(400).json({ error: 'Faltan datos: id_clase.' });
+    }
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO codigo (codigo, clase_id) VALUES ($1, $2) RETURNING *',
+            [id_clase, randomCode]
+        );
+
+        // Devolver la nueva clase creada como respuesta
+        const nuevaClase = result.rows[0];
+        res.status(201).json({
+            message: 'Codigo creado exitosamente',
+            clase: nuevaClase,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ocurrió un error al crear la clase' });
+    }
 });
 //POST CONFIRMAR ASISTENCIA
 app.post("/admitirAlumno/:clase/:codigo", (req, res) => {
