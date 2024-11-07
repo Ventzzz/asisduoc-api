@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());  // Esto es lo que necesitas agregar
 app.use(cors({
-    origin: 'http://localhost:5432' // Permite solo este origen, que es el de tu app en desarrollo
+    origin: '*' // Permite solo este origen, que es el de tu app en desarrollo
   }));
 
 
@@ -101,12 +101,12 @@ app.post("/admitirAlumno", async (req, res) => {
 
     try {
         const resultCodigo = await pool.query(
-            'SELECT clase_id FROM codigo WHERE codigo = $1 RETURNING *',
+            'SELECT clase_id FROM codigo WHERE codigo = $1',
             [codigo]
         );
 
         const resultClase = await pool.query(
-            'SELECT id FROM clase WHERE id = $1 RETURNING *',
+            'SELECT id FROM clase WHERE id = $1',
             [resultCodigo]
         );
 
