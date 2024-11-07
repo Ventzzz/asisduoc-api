@@ -70,19 +70,61 @@ app.post("/generarCodigoClase", async (req, res) => {
         );
 
         // Devolver la nueva clase creada como respuesta
-        const nuevaClase = result.rows[0];
+        const nuevoCodigo = result.rows[0];
         res.status(201).json({
             message: 'Codigo creado exitosamente',
-            clase: nuevaClase,
+            codigo: nuevoCodigo,
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Ocurrió un error al crear la clase' });
+        res.status(500).json({ error: 'Ocurrió un error al crear el código' });
     }
 });
 //POST CONFIRMAR ASISTENCIA
-app.post("/admitirAlumno/:clase/:codigo", (req, res) => {
-    res.send("CONFIRMAR ASISTENCIA")
+app.post("/admitirAlumno", async (req, res) => {
+    console.log(req.body)
+
+    const { id_alumno, codigo } = req.body; // Desestructuramos los datos del cuerpo de la solicitud
+
+    if (!id_alumno) {
+        return res.status(400).json({ error: 'Faltan datos: id_alumno.' });
+    }
+
+    if (!codigo) {
+        return res.status(400).json({ error: 'Faltan datos: codigo.' });
+    }
+
+    const currentTime = new Date();
+    const hours = currentTime.getHours().toString().padStart(2, '0'); // Obtener la hora con dos dígitos
+    const minutes = currentTime.getMinutes().toString().padStart(2, '0'); // Obtener los minutos con dos dígitos
+    const formattedTime = `${hours}:${minutes}`; // Formato final "HH:mm"
+
+    try {
+        const resultCodigo = await pool.query(
+            'SELECT clase_id FROM codigo WHERE codigo = $1 RETURNING *',
+            [codigo]
+        );
+
+        const resultClase = await pool.query(
+            'SELECT id FROM clase WHERE id = $1 RETURNING *',
+            [resultCodigo]
+        );
+
+        const resultAsistencia = await pool.query(
+            'INSERT INTO asistencia (alumno_id, clase_id, hora) VALUES ($1, $2, $3) RETURNING *',
+            [id_alumno, resultClase, formattedTime]
+        );
+
+        // Devolver la nueva clase creada como respuesta
+        const nuevaAsistencia = resultAsistencia.rows[0];
+        res.status(201).json({
+            message: 'Asistencia registrada exitosamente',
+            asistencia: nuevaAsistencia,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ocurrió un error al registrar la asistencia' });
+    }
 });
 //GET OBTENER TODAS LASCLASES
 app.get("/obtenerClases", async (req, res) => {
