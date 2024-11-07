@@ -137,6 +137,29 @@ app.get("/obtenerClases", async (req, res) => {
   }
 });
 
+app.post("/getAsistenciaAlumno", async(req,res) => {
+    console.log(req.body)
+
+    const { alumno_id } = req.body; // Desestructuramos los datos del cuerpo de la solicitud
+
+    if (!alumno_id) {
+        return res.status(400).json({ error: 'Faltan datos: alumno_id.' });
+    }
+
+    try {
+        const result = await pool.query(
+            'SELECT * FROM asistencia WHERE alumno_id = $1',
+            [alumno_id]
+        );
+
+        const asistencia = result.rows;
+        res.status(200).json(asistencia);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ocurrió un error al conseguir la asistencia del alumno' });
+    }
+})
+
 app.post("/registrarAlumno", async (req, res) => {
     console.log(req.body)
 
