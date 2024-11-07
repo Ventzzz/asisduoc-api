@@ -125,7 +125,7 @@ app.post("/admitirAlumno", async (req, res) => {
         res.status(500).json({ error: 'Ocurrió un error al registrar la asistencia' });
     }
 });
-//GET OBTENER TODAS LASCLASES
+
 app.get("/obtenerClases", async (req, res) => {
     try {
     // Realizamos una consulta SQL usando el pool de conexiones
@@ -136,9 +136,56 @@ app.get("/obtenerClases", async (req, res) => {
     res.status(500).json({ error: 'Ocurrió un error al obtener las clases' });
   }
 });
-//GET OBTENER UNA CLASE
-app.get("/obtenerClase/:clase", (req, res) => {
-    res.send("OBTENER UNA CLASE")
+
+app.post("/registrarAlumno", async (req, res) => {
+    console.log(req.body)
+
+    const { nombre_alumno } = req.body; // Desestructuramos los datos del cuerpo de la solicitud
+
+    if (!nombre_alumno) {
+        return res.status(400).json({ error: 'Faltan datos: nombre_alumno.' });
+    }
+
+    try {
+        const result = await pool.query(
+            'INSERT INTO alumno (nombre) VALUES ($1) RETURNING *',
+            [nombre_alumno]
+        );
+
+        const nuevoAlumno = result.rows[0];
+        res.status(201).json({
+            message: 'Alumno registrado exitosamente',
+            alumno: nuevoAlumno,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ocurrió un error al registrar al alumno' });
+    }
+});
+
+app.post("/obtenerIdAlumno", async (req, res) => {
+    console.log(req.body)
+
+    const { nombre_alumno } = req.body; 
+
+    if (!nombre_alumno) {
+        return res.status(400).json({ error: 'Faltan datos: nombre_alumno.' });
+    }
+
+    try {
+        const result = await pool.query(
+            'SELECT id FROM alumno WHERE nombre = $1',
+            [nombre_alumno]
+        );
+
+        const idAlumno = result.rows[0].id;
+        res.status(200).json({
+            id: idAlumno,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ocurrió un error buscar el alumno' });
+    }
 });
 
 
