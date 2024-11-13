@@ -137,6 +137,17 @@ app.get("/obtenerClases", async (req, res) => {
   }
 });
 
+app.get("/obtenerAsistenciaUsuario", async (req, res) => {
+    try {
+    // Realizamos una consulta SQL usando el pool de conexiones
+    const result = await pool.query('SELECT * FROM asistencia;');
+    res.json(result.rows);  // Devuelve los resultados como JSON
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Ocurrió un error al obtener las asistencias' });
+  }
+});
+
 app.post("/getAsistenciaAlumno", async(req,res) => {
     console.log(req.body)
 
